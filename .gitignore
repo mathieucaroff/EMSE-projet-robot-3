@@ -1,0 +1,21 @@
+# IDE
+.vscode
+.project
+.cproject
+.mxproject
+.settings
+
+# Outputs
+*.log
+
+# Hidden source
+trash
+trash.*
+wip
+wip.*
+Backup
+Drivers
+TrueSTUDIO
+
+# git
+.*.git

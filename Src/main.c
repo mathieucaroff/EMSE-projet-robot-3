@@ -124,6 +124,8 @@ void regulateur(void);
 void controle(void);
 void Calcul_Vit(void);
 void ACS(void);
+
+void set_servo_sonar(int16_t); // OX
 /* USER CODE END PFP */
 
 /* USER CODE BEGIN 0 */
@@ -172,6 +174,10 @@ int main(void)
   /* USER CODE BEGIN 2 */
   	HAL_SuspendTick(); // suppresion des Tick interrupt pour le mode sleep.
 
+    // OXA
+    HAL_TIM_PWM_Start(&htim1, TIM_CHANNEL_4);  // OX Start PWM Servosonar
+    // OXV
+
   	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_4);  // Start PWM motor
   	HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
   	CMDE = STOP;
@@ -194,6 +200,7 @@ int main(void)
   /* USER CODE BEGIN 3 */
 
   }
+  set_servo_sonar(+6000);
   /* USER CODE END 3 */
 
 }
@@ -860,6 +867,8 @@ void ACS(void) {
 		if (Mode == SLEEP)
 			Etat = ARRET;
 		if (_DirD == AVANCE && _DirG == AVANCE) {
+			set_servo_sonar(-3000);
+
 			if ((Dist_ACS_1 < Seuil_Dist_1 - Delta1)
 					&& (Dist_ACS_2 < Seuil_Dist_2 - Delta2)) {
 				CVitD = _CVitD;
@@ -889,6 +898,7 @@ void ACS(void) {
 				DirG = RECULE;
 			}
 		} else if (_DirD == RECULE && _DirG == RECULE) {
+		    set_servo_sonar(+7500);
 			if ((Dist_ACS_3 < Seuil_Dist_3 - Delta3)
 					&& (Dist_ACS_4 < Seuil_Dist_4 - Delta4)) {
 				CVitD = _CVitD;
@@ -1031,6 +1041,28 @@ void regulateur(void) {
 	}
 	}
 }
+
+// OXA
+/**
+ * @brief  Set the servo-motor to point in the given direction
+ *
+ * @param angle: Accept a number between -9000 and 9000
+ */
+void set_servo_sonar(int16_t angle) {
+
+        const int16_t right_angle_ref = 9000;
+        int16_t pwm_period = 0xFFFFU;
+        int16_t pwm_5_percent = pwm_period / 20;
+
+        uint16_t pwm_thershold = (uint16_t) (
+                pwm_5_percent + pwm_5_percent * (angle + right_angle_ref) / right_angle_ref
+        );
+
+        __HAL_TIM_SET_COMPARE(&htim1, TIM_CHANNEL_4, (uint16_t ) pwm_thershold);
+
+        return;
+}
+// OXV
 
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 	if (huart->Instance == USART3) {

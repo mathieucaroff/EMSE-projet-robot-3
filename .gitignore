@@ -17,5 +17,9 @@ Backup
 Drivers
 TrueSTUDIO
 
+# IDE
+/Debug/
+
 # git
 .*.git
+

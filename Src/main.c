@@ -75,20 +75,6 @@
 #define CKd_G 0
 #define DELTA 0x50
 
-typedef struct lr_t lr_t;
-struct lr_t {
-	uint16_t left;
-	uint16_t right;
-};
-
-struct servo_lr_t {
-	lr_t B0, D0, O7;
-};
-
-const struct servo_lr_t SERVO_LR = { .B0 = { 3200, 500 }, // mid = 1800
-		.O7 = { 3200, 530 }  // mid = 1700
-};
-
 enum CMDE {
 	START, STOP, AVANT, ARRIERE, DROITE, GAUCHE
 };
@@ -141,11 +127,72 @@ void ACS(void);
 /* USER CODE BEGIN 0 */
 
 /* OX Includes */
+#include "func/time.h" // OX
+
+/* OX C Includes */
 #include "component/battery.c" // OX
 #include "component/servo.c" // OX
 #include "component/sonar.c" // OX
 #include "component/zigbee.c" // OX
 
+/* Gestion_Command moved */
+#include "func/gestion_command.c" // OX
+#include "func/acs.c" // OX
+#include "func/regulateur.c" // OX
+#include "func/move.c" // OX
+#include "func/time.c" // OX
+// #include "func/.c" // OX
+
+
+void controle(void) {
+
+	if (Tech >= T_200_MS) {
+		Tech = 0;
+		// ACS();
+		Calcul_Vit();
+		move_update(); // OX
+		regulateur();
+	}
+}
+
+void Calcul_Vit(void) {
+
+	DistD = __HAL_TIM_GET_COUNTER(&htim3);
+	DistG = __HAL_TIM_GET_COUNTER(&htim4);
+	VitD = abs(DistD - DistD_old);
+	VitG = abs(DistG - DistG_old);
+	DistD_old = DistD;
+	DistG_old = DistG;
+	if (DirD == DirG) {
+		Dist_parcours = Dist_parcours + ((VitD + VitG) >> 1);
+	}
+}
+
+/*
+ * OX
+ */
+void run_forever() {
+	while (1) {
+		Gestion_Commandes();
+		gestion_servo();
+		controle();
+	}
+}
+
+/*
+ * OX
+ */
+void main_center(void) {
+	init_servo();
+
+	//test_servo_sonar_forever();
+	//test_servo_forever();
+	//test_time_forever();
+	//test_move_forever();
+	//test_move_turn_forever();
+	//test_move_drive_forever();
+	run_forever();
+}
 /* USER CODE END 0 */
 
 /**
@@ -205,13 +252,7 @@ int main(void) {
 	/* USER CODE END 2 */
 
 	/* USER CODE BEGIN WHILE */
-
-	while (1) {
-		Gestion_Commandes();
-		gestion_servo();
-		controle();
-	}
-
+	main_center(); // OX
 	/* USER CODE END WHILE */
 
 	/* USER CODE BEGIN 3 */
@@ -286,155 +327,7 @@ static void MX_NVIC_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
-
-/* Gestion_Command moved to this file:  */
-#include "func/gestion_command.c" // OX
-#include "func/acs.c" // OX
-#include "func/regulateur.c" // OX
-
-void controle(void) {
-
-	if (Tech >= T_200_MS) {
-		Tech = 0;
-		// ACS();
-		Calcul_Vit();
-		regulateur();
-	}
-
-}
-
-void Calcul_Vit(void) {
-
-	DistD = __HAL_TIM_GET_COUNTER(&htim3);
-	DistG = __HAL_TIM_GET_COUNTER(&htim4);
-	VitD = abs(DistD - DistD_old);
-	VitG = abs(DistG - DistG_old);
-	DistD_old = DistD;
-	DistG_old = DistG;
-	if (DirD == DirG) {
-		Dist_parcours = Dist_parcours + ((VitD + VitG) >> 1);
-	}
-
-}
-
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart->Instance == USART3) {
-
-		switch (BLUE_RX) {
-		case 'F': {
-			CMDE = AVANT;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'B': {
-			CMDE = ARRIERE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'L': {
-			CMDE = GAUCHE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'R': {
-			CMDE = DROITE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'D': {
-			// disconnect bluetooth
-			break;
-		}
-		default:
-			New_CMDE = 1;
-		}
-
-		HAL_UART_Receive_IT(&huart3, &BLUE_RX, 1);
-	}
-}
-
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
-//
-//	Dist_ACS_3 = adc_buffer[0] - adc_buffer[4];
-//	Dist_ACS_4 = adc_buffer[3] - adc_buffer[7];
-//	Dist_ACS_1 = adc_buffer[1] - adc_buffer[5];
-//	Dist_ACS_2 = adc_buffer[2] - adc_buffer[6];
-
-	// [+0] [+1]
-	Dist_ACS_3 = adc_buffer[0] - adc_buffer[5]; // OX
-	Dist_ACS_4 = adc_buffer[3] - adc_buffer[8]; // OX
-	Dist_ACS_1 = adc_buffer[1] - adc_buffer[6]; // OX
-	Dist_ACS_2 = adc_buffer[2] - adc_buffer[7]; // OX
-	HAL_ADC_Stop_DMA(hadc);
-}
-
-void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
-	static unsigned char cpt = 0;
-
-	if (htim->Instance == TIM2) {
-		cpt++;
-		Time++;
-		Tech++;
-
-		switch (cpt) {
-		case 1: {
-			HAL_GPIO_WritePin(IR3_out_GPIO_Port, IR3_out_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(IR4_out_GPIO_Port, IR4_out_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(IR1_out_GPIO_Port, IR1_out_Pin, GPIO_PIN_SET);
-			HAL_GPIO_WritePin(IR2_out_GPIO_Port, IR2_out_Pin, GPIO_PIN_SET);
-			break;
-		}
-		case 2: {
-			// HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc_buffer, 8);
-			HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc_buffer, 10); // OX
-			break;
-		}
-		case 3: {
-			HAL_GPIO_WritePin(IR3_out_GPIO_Port, IR3_out_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(IR4_out_GPIO_Port, IR4_out_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(IR1_out_GPIO_Port, IR1_out_Pin, GPIO_PIN_RESET);
-			HAL_GPIO_WritePin(IR2_out_GPIO_Port, IR2_out_Pin, GPIO_PIN_RESET);
-			break;
-		}
-		case 4: {
-			// HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc_buffer, 8);
-			HAL_ADC_Start_DMA(&hadc1, (uint32_t *) adc_buffer, 10); // OX
-			break;
-		}
-		default:
-			cpt = 0;
-		}
-	}
-}
-
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
-
-	static unsigned char TOGGLE = 0;
-
-	if (TOGGLE)
-		CMDE = STOP;
-	else
-		CMDE = START;
-	TOGGLE = ~TOGGLE;
-	New_CMDE = 1;
-
-}
-
-/**
- * OX pasted
- * @brief  Analog watchdog callback in non blocking mode.
- * @param  hadc: ADC handle
- * @retval None
- */
-// __weak
-void HAL_ADC_LevelOutOfWindowCallback(ADC_HandleTypeDef* hadc) {
-	HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_SET);
-}
-
+#include "func/hal_interruption.c"
 /* USER CODE END 4 */
 
 /**

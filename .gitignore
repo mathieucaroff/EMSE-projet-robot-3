@@ -4,6 +4,7 @@
 .cproject
 .mxproject
 .settings
+.code_review_properties
 
 # Outputs
 *.log

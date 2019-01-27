@@ -1,21 +1,28 @@
+// OXA
+enum ETAT {
+	VEILLE,
+	ARRET,
+	AV1,
+	AV2,
+	AV3,
+	RV1,
+	RV2,
+	RV3,
+	DV1,
+	DV2,
+	DV3,
+	GV1,
+	GV2,
+	GV3
+};
+
+enum ETAT Etat = VEILLE;
+// OXV
+
 void Gestion_Commandes(void) {
-	enum ETAT {
-		VEILLE,
-		ARRET,
-		AV1,
-		AV2,
-		AV3,
-		RV1,
-		RV2,
-		RV3,
-		DV1,
-		DV2,
-		DV3,
-		GV1,
-		GV2,
-		GV3
-	};
-	static enum ETAT Etat = VEILLE;
+	// OX (-)
+
+	// OX // static enum ETAT Etat = VEILLE;
 
 	if (New_CMDE) {
 		New_CMDE = 0;

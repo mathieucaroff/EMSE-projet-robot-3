@@ -1,19 +1,6 @@
 // OXA
 enum ETAT {
-	VEILLE,
-	ARRET,
-	AV1,
-	AV2,
-	AV3,
-	RV1,
-	RV2,
-	RV3,
-	DV1,
-	DV2,
-	DV3,
-	GV1,
-	GV2,
-	GV3
+	VEILLE, ARRET, AV1, AV2, AV3, RV1, RV2, RV3, DV1, DV2, DV3, GV1, GV2, GV3
 };
 
 enum ETAT Etat = VEILLE;

@@ -143,7 +143,6 @@ void ACS(void);
 #include "func/time.c" // OX
 // #include "func/.c" // OX
 
-
 void controle(void) {
 
 	if (Tech >= T_200_MS) {
@@ -163,6 +162,7 @@ void Calcul_Vit(void) {
 	VitG = abs(DistG - DistG_old);
 	DistD_old = DistD;
 	DistG_old = DistG;
+
 	if (DirD == DirG) {
 		Dist_parcours = Dist_parcours + ((VitD + VitG) >> 1);
 	}
@@ -173,8 +173,10 @@ void Calcul_Vit(void) {
  */
 void run_forever() {
 	while (1) {
+		check_low_battery(); // OX
+
 		Gestion_Commandes();
-		gestion_servo();
+		gestion_servo(); // OX
 		controle();
 	}
 }
@@ -188,7 +190,7 @@ void main_center(void) {
 	//test_servo_sonar_forever();
 	//test_servo_forever();
 	//test_time_forever();
-	//test_move_forever();
+	test_move_forever();
 	//test_move_turn_forever();
 	//test_move_drive_forever();
 	run_forever();
@@ -202,7 +204,6 @@ void main_center(void) {
  */
 int main(void) {
 	/* USER CODE BEGIN 1 */
-
 	/* USER CODE END 1 */
 
 	/* MCU Configuration----------------------------------------------------------*/
@@ -251,6 +252,7 @@ int main(void) {
 
 	/* USER CODE END 2 */
 
+	/* Infinite loop */
 	/* USER CODE BEGIN WHILE */
 	main_center(); // OX
 	/* USER CODE END WHILE */
@@ -285,7 +287,7 @@ void SystemClock_Config(void) {
 	/**Initializes the CPU, AHB and APB busses clocks
 	 */
 	RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_SYSCLK
-			| RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
+	    | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2;
 	RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
 	RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
 	RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;

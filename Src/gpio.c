@@ -80,7 +80,7 @@ void MX_GPIO_Init(void) {
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(GPIOB, DIR2_Pin | IR1_out_Pin | IR4_out_Pin | IR2_out_Pin,
-			GPIO_PIN_RESET);
+	    GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
 	HAL_GPIO_WritePin(DIR1_GPIO_Port, DIR1_Pin, GPIO_PIN_RESET);
@@ -94,14 +94,14 @@ void MX_GPIO_Init(void) {
 	/*Configure GPIO pins : PC0 PC1 PC6 PC7
 	 PC9 PC12 */
 	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_6 | GPIO_PIN_7
-			| GPIO_PIN_9 | GPIO_PIN_12;
+	    | GPIO_PIN_9 | GPIO_PIN_12;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
 	/*Configure GPIO pins : PA0 PA1 PA4 PA6
 	 PA7 PA9 PA10 */
 	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_1 | GPIO_PIN_4 | GPIO_PIN_6
-			| GPIO_PIN_7 | GPIO_PIN_9 | GPIO_PIN_10;
+	    | GPIO_PIN_7 | GPIO_PIN_9 | GPIO_PIN_10;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
@@ -120,7 +120,7 @@ void MX_GPIO_Init(void) {
 	/*Configure GPIO pins : PB0 PB10 PB13 PB8
 	 PB9 */
 	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_10 | GPIO_PIN_13 | GPIO_PIN_8
-			| GPIO_PIN_9;
+	    | GPIO_PIN_9;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 

@@ -71,8 +71,10 @@ void MX_ADC1_Init(void) {
 	/**Configure Analog WatchDog 1
 	 */
 	AnalogWDGConfig.WatchdogMode = ADC_ANALOGWATCHDOG_SINGLE_REG;
+//  AnalogWDGConfig.HighThreshold = 4095;
+//  AnalogWDGConfig.LowThreshold = 3475;
 	AnalogWDGConfig.HighThreshold = 4095;
-	AnalogWDGConfig.LowThreshold = 0;
+	AnalogWDGConfig.LowThreshold = 4095; // 3475 // 3071
 	AnalogWDGConfig.Channel = ADC_CHANNEL_15;
 	AnalogWDGConfig.ITMode = ENABLE;
 	if (HAL_ADC_AnalogWDGConfig(&hadc1, &AnalogWDGConfig) != HAL_OK) {
@@ -190,7 +192,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef* adcHandle) {
 		 PB1     ------> ADC1_IN9
 		 */
 		HAL_GPIO_DeInit(GPIOC,
-		IR1_in_Pin | IR2_in_Pin | IR4_in_Pin | U_Batt_Pin);
+		    IR1_in_Pin | IR2_in_Pin | IR4_in_Pin | U_Batt_Pin);
 
 		HAL_GPIO_DeInit(IR3_in_GPIO_Port, IR3_in_Pin);
 

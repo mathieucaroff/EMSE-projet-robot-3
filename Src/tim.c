@@ -110,7 +110,7 @@ void MX_TIM1_Init(void) {
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim1, &sMasterConfig)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -121,7 +121,7 @@ void MX_TIM1_Init(void) {
 	sConfigOC.OCIdleState = TIM_OCIDLESTATE_RESET;
 	sConfigOC.OCNIdleState = TIM_OCNIDLESTATE_RESET;
 	if (HAL_TIM_PWM_ConfigChannel(&htim1, &sConfigOC, TIM_CHANNEL_4)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -133,7 +133,7 @@ void MX_TIM1_Init(void) {
 	sBreakDeadTimeConfig.BreakPolarity = TIM_BREAKPOLARITY_HIGH;
 	sBreakDeadTimeConfig.AutomaticOutput = TIM_AUTOMATICOUTPUT_DISABLE;
 	if (HAL_TIMEx_ConfigBreakDeadTime(&htim1, &sBreakDeadTimeConfig)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -168,7 +168,7 @@ void MX_TIM2_Init(void) {
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim2, &sMasterConfig)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -177,12 +177,12 @@ void MX_TIM2_Init(void) {
 	sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
 	sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_1)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
 	if (HAL_TIM_PWM_ConfigChannel(&htim2, &sConfigOC, TIM_CHANNEL_4)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -216,7 +216,7 @@ void MX_TIM3_Init(void) {
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim3, &sMasterConfig)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 
@@ -248,7 +248,7 @@ void MX_TIM4_Init(void) {
 	sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
 	sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
 	if (HAL_TIMEx_MasterConfigSynchronization(&htim4, &sMasterConfig)
-			!= HAL_OK) {
+	    != HAL_OK) {
 		_Error_Handler(__FILE__, __LINE__);
 	}
 

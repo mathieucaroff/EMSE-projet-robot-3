@@ -30,6 +30,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 			// disconnect bluetooth
 			break;
 		}
+
+		case 'W': {
+			// Front Lights ON
+			break;
+		}
+		case 'w': {
+			// Front Lights OFF
+			break;
+		}
 		default:
 			New_CMDE = 1;
 		}

@@ -173,7 +173,7 @@ enum ETAT Etat = VEILLE;
 /* OX C Includes */
 #include "component/battery.c" // OX
 #include "component/servo.c" // OX
-#include "component/sonar.c" // OX
+// #include "component/sonar.c" // OX
 #include "component/zigbee.c" // OX
 
 /* Gestion_Command moved */
@@ -228,7 +228,7 @@ void run_forever() {
 		Gestion_Commandes();
 		gestion_servo(); // OX
 		gestion_move(); // OX
-		gestion_sonar(); // OX
+
 		controle();
 	}
 }
@@ -238,9 +238,10 @@ void run_forever() {
  */
 void main_center(void) {
 	init_servo();
-	init_sonar();
+	// init_sonar();
 
-	servo_spin_start = 1;
+	// servo_spin_start = 1;
+	// move_walk_start = 1;
 
 	//test_servo_sonar_forever();
 	//test_servo_forever();

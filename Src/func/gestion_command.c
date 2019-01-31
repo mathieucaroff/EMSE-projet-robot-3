@@ -536,7 +536,7 @@ void Gestion_Commandes(void) {
 		}
 		case DEMO_SERVO_ON: {
 			Etat = DEMO_SERVO;
-			run_demo_servo = 1;
+			// run_demo_servo = 1;
 			break;
 		}
 		case DEMO_SERVO_OFF: {

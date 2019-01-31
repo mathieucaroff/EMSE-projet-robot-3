@@ -35,12 +35,14 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 		case 'W': {
 			// Front Lights ON
-			HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_SET);
+			// HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_SET);
+			move_walk_start = 1;
 			break;
 		}
 		case 'w': {
 			// Front Lights OFF
-			HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_RESET);
+			// HAL_GPIO_WritePin(GPIOA, LD2_Pin, GPIO_PIN_RESET);
+			move_walk_start = 0;
 			break;
 		}
 
@@ -57,6 +59,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 
 		case 'V': {
 			// Horn ON
+			set_servo_left();
 			CMDE = DEMO_SERVO_ON;
 			New_CMDE = 1;
 			break;
@@ -64,6 +67,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
 		case 'v': {
 			// Horn OFF
 			CMDE = DEMO_SERVO_OFF;
+			set_servo_mid();
 			New_CMDE = 1;
 			break;
 		}

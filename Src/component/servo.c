@@ -20,7 +20,7 @@ struct servo_lmr_t {
 
 const servo_lmr_t SERVO_LMR_ALL = {
 	.BA = { 3200, 1800, 500 },
-	.S8 = { 3200, 1750, 450 },
+	.S8 = { 3000, 1700, 650 },
 	.B0 = { 3200, 1800, 500 },
 	.O7 = { 3200, 1700, 530 },
 	.SB = { 2700, 1880, 760 },
@@ -99,11 +99,14 @@ void demo_servo(void) {
 	switch (etat) {
 	case 0:
 		set_servo_right();
+		break;
 	case 1:
 	case 3:
 		set_servo_mid();
+		break;
 	case 2:
 		set_servo_left();
+		break;
 	}
 	time_require_wait_ms(4000 / (1 + etat % 2));
 	etat++;

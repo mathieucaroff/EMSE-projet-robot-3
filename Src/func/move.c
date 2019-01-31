@@ -79,10 +79,10 @@ void demo_move_do(uint8_t x) {
 		move_require_drive(-60);
 		break;
 	case 2:
-		move_require_rotate(+180);
+		move_require_rotate(+90);
 		break;
 	case 3:
-		move_require_rotate(-180);
+		move_require_rotate(-90);
 		break;
 	default:
 		break;
@@ -151,6 +151,8 @@ void move_walk() {
 		move_walk_do(w);
 		w++;
 	} else if (w < 6) {
+		CMDE = STOP;
+		New_CMDE = 1;
 		move_walk_done = 1;
 		move_walk_start = 0;
 		w = 0;

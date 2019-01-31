@@ -16,9 +16,9 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
 	static unsigned char cpt = 0;
 
-	sonar_request = 1;
-
 	if (htim->Instance == TIM2) {
+		// gestion_sonar(); // OX
+
 		cpt++;
 		Time++;
 		Tech++;

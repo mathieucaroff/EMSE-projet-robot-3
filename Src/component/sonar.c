@@ -8,11 +8,16 @@
  *          -SONAR_RX/PW_MAX_DURATION : Numbers of TIM2 tops
  *          -SCALE_FACTOR : us/cm conversion factor between PW high duration and range of detected object
  */
+#define SONAR_RX_MAX_DURATION   1600 // ~20 us high
+#define SONAR_PW_MAX_DURATION   2432000 // 38 ms
+#define SONAR_READ_PERIOD       3136000 // 49 ms
+#define SONAR_INIT_PERIOD       16000000 // 250ms
 
-#define SONAR_RX_MAX_DURATION   1 // 25 / 1000 // ~20 us high
-#define SONAR_PW_MAX_DURATION   38 // 38 ms
-#define SONAR_READ_PERIOD       49 // 49 ms
-#define SONAR_INIT_PERIOD       250 // 250ms
+//#define SONAR_RX_MAX_DURATION   1 // 25 / 1000 // ~20 us high
+//#define SONAR_PW_MAX_DURATION   38 // 38 ms
+//#define SONAR_READ_PERIOD       49 // 49 ms
+//#define SONAR_INIT_PERIOD       250 // 250ms
+
 #define SCALE_FACTOR            57.87 // 147 us/inch
 
 enum SONAR_STATE {
@@ -109,8 +114,8 @@ void gestion_sonar_do(void) {
  * Call this function on timer 2 callback to get sonar reading.
  */
 void gestion_sonar(void) {
-	if (sonar_request) {
-		sonar_request = 0;
-		gestion_sonar_do();
-	}
+	gestion_sonar_do();
+//	if (sonar_request) {
+//		sonar_request = 0;
+//	}
 }

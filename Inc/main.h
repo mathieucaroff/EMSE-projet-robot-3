@@ -70,6 +70,8 @@
 #define IR3_in_GPIO_Port GPIOB
 #define DIR2_Pin GPIO_PIN_2
 #define DIR2_GPIO_Port GPIOB
+#define Trig_Sonar_Pin GPIO_PIN_10
+#define Trig_Sonar_GPIO_Port GPIOB
 #define PWMD_Pin GPIO_PIN_11
 #define PWMD_GPIO_Port GPIOB
 #define IR1_out_Pin GPIO_PIN_12
@@ -102,6 +104,8 @@
 #define ENC2A_GPIO_Port GPIOB
 #define ENC2B_Pin GPIO_PIN_7
 #define ENC2B_GPIO_Port GPIOB
+#define Echo_Sonar_Pin GPIO_PIN_8
+#define Echo_Sonar_GPIO_Port GPIOB
 
 /* ########################## Assert Selection ############################## */
 /**

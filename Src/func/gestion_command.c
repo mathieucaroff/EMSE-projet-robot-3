@@ -1,15 +1,4 @@
-// OXA
-enum ETAT {
-	VEILLE, ARRET, AV1, AV2, AV3, RV1, RV2, RV3, DV1, DV2, DV3, GV1, GV2, GV3
-};
-
-enum ETAT Etat = VEILLE;
-// OXV
-
 void Gestion_Commandes(void) {
-	// OX (-)
-
-	// OX // static enum ETAT Etat = VEILLE;
 
 	if (New_CMDE) {
 		New_CMDE = 0;
@@ -154,6 +143,7 @@ void Gestion_Commandes(void) {
 				Mode = ACTIF;
 				break;
 			}
+			default: break;
 			}
 			break;
 		}
@@ -282,6 +272,7 @@ void Gestion_Commandes(void) {
 				Mode = ACTIF;
 				break;
 			}
+			default: break;
 			}
 			break;
 		}
@@ -410,6 +401,7 @@ void Gestion_Commandes(void) {
 				Mode = ACTIF;
 				break;
 			}
+			default: break;
 			}
 			break;
 		}
@@ -538,9 +530,29 @@ void Gestion_Commandes(void) {
 				Mode = ACTIF;
 				break;
 			}
+			default: break;
 			}
 			break;
-
+		}
+		case DEMO_SERVO_ON: {
+			Etat = DEMO_SERVO;
+			run_demo_servo = 1;
+			break;
+		}
+		case DEMO_SERVO_OFF: {
+			Etat = ARRET;
+			run_demo_servo = 0;
+			break;
+		}
+		case DEMO_MOVE_ON: {
+			Etat = DEMO_SERVO;
+			run_demo_move = 1;
+			break;
+		}
+		case DEMO_MOVE_OFF: {
+			Etat = ARRET;
+			run_demo_move = 0;
+			break;
 		}
 		}
 	}

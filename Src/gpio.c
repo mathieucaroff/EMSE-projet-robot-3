@@ -79,7 +79,8 @@ void MX_GPIO_Init(void) {
 	HAL_GPIO_WritePin(GPIOA, LD2_Pin | IR3_out_Pin, GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
-	HAL_GPIO_WritePin(GPIOB, DIR2_Pin | IR1_out_Pin | IR4_out_Pin | IR2_out_Pin,
+	HAL_GPIO_WritePin(GPIOB,
+	    DIR2_Pin | Trig_Sonar_Pin | IR1_out_Pin | IR4_out_Pin | IR2_out_Pin,
 	    GPIO_PIN_RESET);
 
 	/*Configure GPIO pin Output Level */
@@ -117,15 +118,15 @@ void MX_GPIO_Init(void) {
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : PB0 PB10 PB13 PB8
-	 PB9 */
-	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_10 | GPIO_PIN_13 | GPIO_PIN_8
-	    | GPIO_PIN_9;
+	/*Configure GPIO pins : PB0 PB13 PB9 */
+	GPIO_InitStruct.Pin = GPIO_PIN_0 | GPIO_PIN_13 | GPIO_PIN_9;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
-	/*Configure GPIO pins : PBPin PBPin PBPin PBPin */
-	GPIO_InitStruct.Pin = DIR2_Pin | IR1_out_Pin | IR4_out_Pin | IR2_out_Pin;
+	/*Configure GPIO pins : PBPin PBPin PBPin PBPin
+	 PBPin */
+	GPIO_InitStruct.Pin = DIR2_Pin | Trig_Sonar_Pin | IR1_out_Pin | IR4_out_Pin
+	    | IR2_out_Pin;
 	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
 	HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
@@ -140,6 +141,12 @@ void MX_GPIO_Init(void) {
 	GPIO_InitStruct.Pin = GPIO_PIN_2;
 	GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
 	HAL_GPIO_Init(GPIOD, &GPIO_InitStruct);
+
+	/*Configure GPIO pin : PtPin */
+	GPIO_InitStruct.Pin = Echo_Sonar_Pin;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	HAL_GPIO_Init(Echo_Sonar_GPIO_Port, &GPIO_InitStruct);
 
 }
 

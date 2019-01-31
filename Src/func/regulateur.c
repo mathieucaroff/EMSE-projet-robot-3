@@ -1,10 +1,15 @@
+enum ETAT_REGULATEUR {
+	 SLEEP_REGULATEUR, ACTIF_REGULATEUR
+};
+
+static enum ETAT_REGULATEUR Etat_regulateur = SLEEP_REGULATEUR;
+
 void regulateur(void) {
-//	enum ETAT {
-//		ARRET, ACTIF
-		// SLEEP, ACTIF
+//	enum Etat {
+//		ARRET, ACTIF_REGULATEUR
+		// SLEEP_REGULATEUR, ACTIF_REGULATEUR
 //	};
 //	static enum ETAT Etat = ARRET;
-	static enum MODE Etat = SLEEP;
 
 	uint16_t Kp_D = CKp_D;
 	uint16_t Kp_G = CKp_G;
@@ -22,11 +27,9 @@ void regulateur(void) {
 	static int16_t V_erreurD = 0;
 	static int16_t V_erreurG = 0;
 
-	switch (Etat) {
-	// case ARRET: {
-	case SLEEP: {
+	if (Etat_regulateur == SLEEP_REGULATEUR) {
 		if (Mode == ACTIF)
-			Etat = ACTIF;
+			Etat_regulateur = ACTIF_REGULATEUR;
 		else {
 			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_4, 0);
 			__HAL_TIM_SET_COMPARE(&htim2, TIM_CHANNEL_1, 0);
@@ -46,14 +49,12 @@ void regulateur(void) {
 			HAL_TIM_PWM_Start(&htim2, TIM_CHANNEL_1);
 			Time = 0;
 		}
-		break;
-	}
-	case ACTIF: {
+	} else {
 		if ((CVitD != 0) && (CVitG != 0))
 			Time = 0;
 		if ((Mode == SLEEP) && (VitD == 0) && (VitG == 0) && Time > T_2_S) {
-			// Etat = ARRET;
-			Etat = SLEEP;
+			// Etat_regulateur = ARRET;
+			Etat_regulateur = SLEEP_REGULATEUR;
 		}
 		else {
 			ErreurD = CVitD - VitD;
@@ -90,7 +91,5 @@ void regulateur(void) {
 			HAL_GPIO_WritePin(DIR2_GPIO_Port, DIR2_Pin, (GPIO_PinState) DirG);
 
 		}
-		break;
-	}
 	}
 }

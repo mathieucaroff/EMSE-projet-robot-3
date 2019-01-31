@@ -1,6 +1,6 @@
 
 // OX
-uint8_t low_battery = 0;
+volatile uint8_t low_battery = 0;
 
 /**
  * OX pasted

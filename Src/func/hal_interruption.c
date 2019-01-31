@@ -1,52 +1,3 @@
-void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart) {
-	if (huart->Instance == USART3) {
-
-		switch (BLUE_RX) {
-		case 'F': {
-			CMDE = AVANT;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'B': {
-			CMDE = ARRIERE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'L': {
-			CMDE = GAUCHE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'R': {
-			CMDE = DROITE;
-			//New_CMDE = 1;
-			break;
-		}
-
-		case 'D': {
-			// disconnect bluetooth
-			break;
-		}
-
-		case 'W': {
-			// Front Lights ON
-			break;
-		}
-		case 'w': {
-			// Front Lights OFF
-			break;
-		}
-		default:
-			New_CMDE = 1;
-		}
-
-		HAL_UART_Receive_IT(&huart3, &BLUE_RX, 1);
-	}
-}
-
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 //
 //	Dist_ACS_3 = adc_buffer[0] - adc_buffer[4];
@@ -64,6 +15,8 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc) {
 
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef * htim) {
 	static unsigned char cpt = 0;
+
+	sonar_request = 1;
 
 	if (htim->Instance == TIM2) {
 		cpt++;

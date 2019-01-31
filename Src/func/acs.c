@@ -1,34 +1,35 @@
-void ACS(void) {
-//	enum ETAT {
-//		ARRET, ACTIF
-		// SLEEP, ACTIF
-//	};
-//	static enum ETAT Etat = ARRET;
+enum ETAT_ACS {
+	 SLEEP_ACS, ACTIF_ACS
+};
 
-	static enum MODE Etat = SLEEP;
+static enum ETAT_ACS Etat_acs = SLEEP_ACS;
+
+void ACS(void) {
+//	enum Etat_acs {
+//		ARRET, ACTIF_ACS
+		// SLEEP_ACS, ACTIF_ACS
+//	};
+//	static enum Etat_acs Etat_acs = ARRET;
 
 	static uint16_t Delta1 = 0;
 	static uint16_t Delta2 = 0;
 	static uint16_t Delta3 = 0;
 	static uint16_t Delta4 = 0;
 
-	switch (Etat) {
-	// case ARRET: {
-	case SLEEP: {
+	if (Etat_acs == SLEEP_ACS) {
 		if (Mode == ACTIF)
-			Etat = ACTIF;
+			Etat_acs = ACTIF_ACS;
 		else {
 			CVitD = _CVitD;
 			CVitG = _CVitG;
 			DirD = _DirD;
 			DirG = _DirG;
 		}
-		break;
 	}
-	case ACTIF: {
+	else {
 		if (Mode == SLEEP) {
-			// Etat = ARRET;
-			Etat = SLEEP;
+			// Etat_acs = ARRET;
+			Etat_acs = SLEEP_ACS;
 		}
 		if (_DirD == AVANCE && _DirG == AVANCE) {
 			if ((Dist_ACS_1 < Seuil_Dist_1 - Delta1)
@@ -94,7 +95,5 @@ void ACS(void) {
 			DirD = _DirD;
 			DirG = _DirG;
 		}
-		break;
-	}
 	}
 }

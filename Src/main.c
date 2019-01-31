@@ -75,8 +75,27 @@
 #define CKd_G 0
 #define DELTA 0x50
 
+#define MAX(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a > _b ? _a : _b; })
+
+#define MIN(a,b) \
+   ({ __typeof__ (a) _a = (a); \
+       __typeof__ (b) _b = (b); \
+     _a < _b ? _a : _b; })
+
 enum CMDE {
-	START, STOP, AVANT, ARRIERE, DROITE, GAUCHE
+	START,
+	STOP,
+	AVANT,
+	ARRIERE,
+	DROITE,
+	GAUCHE,
+	DEMO_SERVO_ON,
+	DEMO_SERVO_OFF,
+	DEMO_MOVE_ON,
+	DEMO_MOVE_OFF,
 };
 volatile enum CMDE CMDE;
 enum MODE {
@@ -126,6 +145,28 @@ void ACS(void);
 
 /* USER CODE BEGIN 0 */
 
+// OXA
+enum ETAT {
+	VEILLE,
+	ARRET,
+	AV1,
+	AV2,
+	AV3,
+	RV1,
+	RV2,
+	RV3,
+	DV1,
+	DV2,
+	DV3,
+	GV1,
+	GV2,
+	GV3,
+	DEMO_SERVO,
+	DEMO_MOVE
+};
+enum ETAT Etat = VEILLE;
+// OXV
+
 /* OX Includes */
 #include "func/time.h" // OX
 
@@ -136,23 +177,12 @@ void ACS(void);
 #include "component/zigbee.c" // OX
 
 /* Gestion_Command moved */
-#include "func/gestion_command.c" // OX
 #include "func/acs.c" // OX
 #include "func/regulateur.c" // OX
 #include "func/move.c" // OX
 #include "func/time.c" // OX
+#include "func/gestion_command.c" // OX
 // #include "func/.c" // OX
-
-void controle(void) {
-
-	if (Tech >= T_200_MS) {
-		Tech = 0;
-		// ACS();
-		Calcul_Vit();
-		move_update(); // OX
-		regulateur();
-	}
-}
 
 void Calcul_Vit(void) {
 
@@ -166,6 +196,28 @@ void Calcul_Vit(void) {
 	if (DirD == DirG) {
 		Dist_parcours = Dist_parcours + ((VitD + VitG) >> 1);
 	}
+
+	uint16_t VitDG = MIN(VitD, VitG); // OX
+
+	move_update(VitDG); // OX
+
+	VitDG = 0;
+}
+
+void controle(void) {
+	if (Tech >= T_200_MS) {
+		Tech = 0;
+
+		check_low_battery(); // OX
+		ACS();
+		Calcul_Vit();
+		regulateur();
+
+		if (servo_spin_done) {
+			servo_spin_done = 0;
+			move_walk_start = 0;
+		}
+	}
 }
 
 /*
@@ -173,10 +225,10 @@ void Calcul_Vit(void) {
  */
 void run_forever() {
 	while (1) {
-		check_low_battery(); // OX
-
 		Gestion_Commandes();
 		gestion_servo(); // OX
+		gestion_move(); // OX
+		gestion_sonar(); // OX
 		controle();
 	}
 }
@@ -186,13 +238,14 @@ void run_forever() {
  */
 void main_center(void) {
 	init_servo();
+	init_sonar();
+
+	servo_spin_start = 1;
 
 	//test_servo_sonar_forever();
 	//test_servo_forever();
 	//test_time_forever();
-	test_move_forever();
-	//test_move_turn_forever();
-	//test_move_drive_forever();
+
 	run_forever();
 }
 /* USER CODE END 0 */
@@ -329,6 +382,7 @@ static void MX_NVIC_Init(void) {
 }
 
 /* USER CODE BEGIN 4 */
+#include "component/bluetooth.c"
 #include "func/hal_interruption.c"
 /* USER CODE END 4 */
 

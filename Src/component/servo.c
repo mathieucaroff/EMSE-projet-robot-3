@@ -1,4 +1,9 @@
 // OX
+volatile uint8_t run_demo_servo = 0;
+
+uint8_t servo_spin_start = 0;
+uint8_t servo_spin_done = 0;
+
 
 typedef struct lmr_t lmr_t;
 struct lmr_t {
@@ -10,11 +15,12 @@ struct lmr_t {
 /* Dealing with each robot characteristics */
 typedef struct servo_lmr_t servo_lmr_t;
 struct servo_lmr_t {
-	const lmr_t B0, BA, D0, O7, SB;
+	const lmr_t B0, BA, D0, O7, SB, S8;
 };
 
 const servo_lmr_t SERVO_LMR_ALL = {
 	.BA = { 3200, 1800, 500 },
+	.S8 = { 3200, 1750, 450 },
 	.B0 = { 3200, 1800, 500 },
 	.O7 = { 3200, 1700, 530 },
 	.SB = { 2700, 1880, 760 },
@@ -22,7 +28,7 @@ const servo_lmr_t SERVO_LMR_ALL = {
 
 /* Selecting the current robot */
 // const lmr_t SERVO_LMR = { 2700, 1880, 760 };
-#define SERVO_LMR SERVO_LMR_ALL.SB
+#define SERVO_LMR SERVO_LMR_ALL.S8
 
 
 /**
@@ -104,11 +110,51 @@ void demo_servo(void) {
 	etat %= 4;
 }
 
+void servo_spin_do(uint8_t u) {
+	switch (u) {
+	case 0:
+		set_servo_mid();
+		break;
+	case 1:
+		set_servo_left();
+		break;
+	case 2:
+		set_servo_right();
+		break;
+	case 3:
+		set_servo_mid();
+		break;
+	default:
+		break;
+	}
+
+}
+
+void servo_spin() {
+	static uint8_t w = 0;
+
+	if (time_waiting()) {
+		return;
+	} else if (w < 5) {
+		servo_spin_do(w);
+		time_require_wait_ms(1250);
+		w++;
+	} else if (w < 6) {
+		servo_spin_done = 1;
+		servo_spin_start = 0;
+		w = 0;
+	}
+}
+
 void init_servo(void) {
 	set_servo_mid();
 }
 
 void gestion_servo(void) {
-	// demo_servo();
+	if (servo_spin_start) {
+		servo_spin();
+	} else if (run_demo_servo) {
+		demo_servo();
+	}
 	return;
 }

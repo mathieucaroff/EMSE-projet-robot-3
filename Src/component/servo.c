@@ -143,9 +143,9 @@ void servo_spin() {
 		time_require_wait_ms(1250);
 		w++;
 	} else if (w < 6) {
+		w = 0;
 		servo_spin_done = 1;
 		servo_spin_start = 0;
-		w = 0;
 	}
 }
 
